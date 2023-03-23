@@ -19,6 +19,7 @@ public class AirportMain {
         Passenger passengerThree = new Passenger();
 
         airport.addPlane(planeOne);
+        //some comment
         airport.addPlane(planeTwo);
 
         airport.addPassenger(passengerOne);
