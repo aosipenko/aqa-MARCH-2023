@@ -1,14 +1,16 @@
 package org.prog;
 
-import java.util.ArrayList;
+import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Main {
 
@@ -17,23 +19,14 @@ public class Main {
     Thread.sleep(15000);
     try {
       webDriver = getDriver();
+      loadCloudFlarePage(webDriver);
+      waitAndAcceptCookies(webDriver);
+      acceptCookies(webDriver);
+      selectLanguage(webDriver, "Deutsch");
 
-      loadGooglePage(webDriver);
-      acceptCookiesIfVisible(webDriver);
-      googleSearch(webDriver, "Amazon");
-      validateSearch(webDriver, "Amazon");
-
-      loadGooglePage(webDriver);
-      googleSearch(webDriver, "Facebook");
-      validateSearch(webDriver, "Facebook");
-
-      loadGooglePage(webDriver);
-      googleSearch(webDriver, "LinkedIn");
-      validateSearch(webDriver, "LinkedIn");
-
-      loadGooglePage(webDriver);
-      googleSearch(webDriver, "Cloudflare");
-      validateSearch(webDriver, "Cloudflare");
+      new WebDriverWait(webDriver, Duration.ofSeconds(60))
+          .until(ExpectedConditions.textToBePresentInElementLocated(By.className("headline-1"), "Ein globales Netzwerk für die Cloud"));
+      System.out.println(webDriver.findElement(By.className("headline-1")).getText());
     } finally {
       if (webDriver != null) {
         webDriver.quit();
@@ -41,9 +34,9 @@ public class Main {
     }
   }
 
-  private static void loadGooglePage(WebDriver webDriver){
+  private static void loadCloudFlarePage(WebDriver webDriver) {
     webDriver.get("about::blank");
-    webDriver.get("https://google.com/");
+    webDriver.get("https://www.cloudflare.com/");
   }
 
   private static WebDriver getDriver() {
@@ -52,52 +45,40 @@ public class Main {
     return new ChromeDriver(chromeOptions);
   }
 
-  private static void validateSearch(WebDriver webDriver, String searchValue) {
-    List<WebElement> searchResultHeaders = webDriver.findElements(By.xpath("//a/h3"));
-    List<String> headerList = new ArrayList<>();
+  private static void waitAndAcceptCookies(WebDriver webDriver) {
+    new WebDriverWait(webDriver, Duration.ofSeconds(45))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("onetrust-policy-text")));
+    new WebDriverWait(webDriver, Duration.ofSeconds(5))
+        .until(ExpectedConditions.elementToBeClickable(By.id("onetrust-accept-btn-handler")));
+  }
 
-    for (WebElement searchHeader : searchResultHeaders) {
-      headerList.add(searchHeader.getText());
+  private static void selectLanguage(WebDriver driver, String language) {
+    driver.findElements(By.className("newNav-button")).get(2).click();
+    List<WebElement> dropDownOptions = driver.findElements(By.className("cf-dropdown")).get(2)
+        .findElements(By.xpath("//ul/li/a"));
+
+    Optional<WebElement> languageBtn = dropDownOptions.stream()
+        .filter(webElement -> webElement.getText().equals(language))
+        .findFirst();
+
+    if (languageBtn.isPresent()) {
+      languageBtn.get().click();
+    } else {
+      throw new RuntimeException("Language button not found!");
     }
+  }
 
-    for (String headerText : headerList) {
-      if (headerText.contains(searchValue)) {
-        System.out.println("Search is a success!");
-        break;
+  private static void acceptCookies(WebDriver driver) {
+    for (int i = 0; i < 5; i++) {
+      try {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+            .until(ExpectedConditions.elementToBeClickable(By.id("onetrust-accept-btn-handler")))
+            .click();
+        return;
+      } catch (WebDriverException we) {
+        System.err.println("Failed to click element, will try again");
       }
     }
-
-//    List<String> headers = webDriver.findElements(By.xpath("//a/h3")).stream()
-//        .map(webElement -> {
-//          return webElement.getText();
-//        })
-//        .map(elementText -> {
-//          System.out.println(elementText);
-//          return elementText;
-//        })
-//        .collect(Collectors.toList());
-
-//    List<String> headers = webDriver.findElements(By.xpath("//a/h3")).stream()
-//        .map(webElement -> webElement.getText())
-//        .filter(elementText -> elementText != null && elementText.length() > 0)
-//        .collect(Collectors.toList());
-
-//    System.out.println(headers.size());
-  }
-
-  private static void googleSearch(WebDriver webDriver, String searchValue) {
-    WebElement searchBar = webDriver.findElement(By.name("q"));
-    searchBar.sendKeys(searchValue);
-    searchBar.sendKeys(Keys.ENTER);
-  }
-
-  private static void acceptCookiesIfVisible(WebDriver webDriver) {
-    List<WebElement> buttons = webDriver.findElements(By.tagName("button"));
-    if (buttons.size() == 5) {
-      WebElement acceptCookiesButton = buttons.get(3);
-      acceptCookiesButton.click();
-    } else {
-      System.out.println("No cookies form is displayed!");
-    }
+    throw new RuntimeException("Failed to click element");
   }
 }
