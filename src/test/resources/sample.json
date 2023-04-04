@@ -1,0 +1,52 @@
+{
+  "purchases": {
+    "goods": [
+      {
+        "id": 1,
+        "quantity": 1,
+        "goods": {
+          "id": 359483523,
+          "top_parent_id": 4627949,
+          "seller_id": 151707,
+          "producer_id": 5964,
+          "merchant_id": 17,
+          "category_id": 80003,
+          "href": "https://rozetka.com.ua/359483523/p359483523/",
+          "title": "Смартфон Xiaomi Redmi Note 10 Pro 6/64Gb Glacier Blue (Global Version)",
+          "title_only": "",
+          "price": "10220",
+          "price_unit": "грн",
+          "price_pcs": "249.27",
+          "cart_min": 0,
+          "cart_max": 0,
+          "image": {
+            "medium": "https://content2.rozetka.com.ua/goods/images/medium/297209713.jpg",
+            "original": "https://content2.rozetka.com.ua/goods/images/original/297209713.jpg",
+            "preview": "https://content2.rozetka.com.ua/goods/images/preview/297209713.jpg"
+          }
+        },
+        "price": {
+          "old_price": 10220,
+          "price": 10220,
+          "discount": 0
+        },
+        "cost": {
+          "old_price": 10220,
+          "price": 10220,
+          "discount": 0
+        },
+        "coupons": [],
+        "discounts": []
+      }
+    ]
+  },
+  "cost": {
+    "old_price": 10220,
+    "price": 10220,
+    "discount": 0
+  },
+  "discounts": [],
+  "coupons": [],
+  "error_messages": [],
+  "quantity": 1
+}
