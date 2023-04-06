@@ -1,4 +1,4 @@
-# PersonID unique, PK
+# PersonID unique, PK, auto
 # LastName
 # FirstName
 # Title
