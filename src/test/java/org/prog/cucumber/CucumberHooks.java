@@ -7,10 +7,6 @@ import io.cucumber.plugin.event.TestRunStarted;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.pages.GooglePage;
-import org.prog.steps.WebSteps;
-
-import java.util.Objects;
 
 public class CucumberHooks implements EventListener {
 
@@ -21,13 +17,13 @@ public class CucumberHooks implements EventListener {
     }
 
     public void setUp(TestRunStarted event) {
-        if (Objects.isNull(WebSteps.googlePage)) {
-            WebSteps.googlePage = new GooglePage(getDriver());
-        }
+//        if (Objects.isNull(WebSteps.googlePage)) {
+//            WebSteps.googlePage = new GooglePage(getDriver());
+//        }
     }
 
     public void tearDown(TestRunFinished event) {
-        WebSteps.googlePage.quitDriver();
+//        WebSteps.googlePage.quitDriver();
     }
 
     public static WebDriver getDriver() {
