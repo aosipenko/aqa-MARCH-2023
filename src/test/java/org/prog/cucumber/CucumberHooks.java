@@ -30,6 +30,6 @@ public class CucumberHooks implements EventListener {
     @SneakyThrows
     public static WebDriver getDriver() {
         return WebDriverFactory.getInstance()
-                .getDriver(DriverName.valueOf(System.getenv("driver.name")));
+                .getDriver(DriverName.byName(System.getenv("driver.name")));
     }
 }
