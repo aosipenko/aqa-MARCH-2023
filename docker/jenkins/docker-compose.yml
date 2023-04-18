@@ -2,8 +2,6 @@
 version: '3.8'
 services:
   jenkins:
-    networks:
-      selenoid: null
     image: jenkins/jenkins:lts
     privileged: true
     user: root
