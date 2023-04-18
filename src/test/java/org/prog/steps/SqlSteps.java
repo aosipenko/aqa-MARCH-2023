@@ -2,7 +2,9 @@ package org.prog.steps;
 
 import io.cucumber.java.en.Given;
 import org.prog.api.dto.NameDto;
+import org.prog.api.dto.SearchResultsDto;
 import org.prog.api.dto.UserDto;
+import org.prog.util.DataHolder;
 import org.testng.Assert;
 
 import java.net.InetAddress;
@@ -19,20 +21,17 @@ public class SqlSteps {
     private final static String SQL_INSERT =
             "INSERT INTO Persons (LastName, FirstName, Title, Gender) VALUES ('%s', '%s', '%s', '%s')";
 
-    public static UserDto activeUser;
-
     private static final Random random = new Random();
 
-    @Given("store persons data to DB")
-    public void storePersonsDataToDB() {
-        RestSteps.searchResultsDto.getResults().forEach(userDto -> storeUser(userDto));
+    @Given("store persons data to DB from {string}")
+    public void storePersonsDataToDB(String alias) {
+        ((SearchResultsDto) DataHolder.getInstance().get(alias))
+                .getResults().forEach(userDto -> storeUser(userDto));
     }
 
-    @Given("i pick random user from DB")
-    public void pickRandomPerson() {
-        activeUser = getRandomUserFromDB();
-
-        System.out.println(activeUser.getName().getFirst() + " " + activeUser.getName().getLast());
+    @Given("i pick random user from DB as {string}")
+    public void pickRandomPerson(String alias) {
+        DataHolder.getInstance().put(alias, getRandomUserFromDB());
     }
 
     private void storeUser(UserDto userDto) {

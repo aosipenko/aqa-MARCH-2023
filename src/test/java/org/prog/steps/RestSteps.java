@@ -5,21 +5,20 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.prog.api.dto.SearchResultsDto;
+import org.prog.util.DataHolder;
 
 public class RestSteps {
 
   private final static String URL =
       "https://randomuser.me/api/?inc=gender,name,nat&noinfo&results=%s";
 
-  public static SearchResultsDto searchResultsDto;
-
-  @Given("i generate {int} random person")
-  public void generateRandomPerson(int amount) {
+  @Given("i generate {int} random person as {string}")
+  public void generateRandomPerson(int amount, String alias) {
     RequestSpecification rs = RestAssured.given();
     Response response = rs.get(getUsers(amount));
     response.then().assertThat().statusCode(200);
 
-    searchResultsDto = response.as(SearchResultsDto.class);
+    DataHolder.getInstance().put(alias, response.as(SearchResultsDto.class));
   }
 
   private String getUsers(int amount) {

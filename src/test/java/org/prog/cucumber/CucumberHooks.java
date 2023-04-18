@@ -6,14 +6,8 @@ import io.cucumber.plugin.event.TestRunFinished;
 import io.cucumber.plugin.event.TestRunStarted;
 import lombok.SneakyThrows;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.pages.GooglePage;
-import org.prog.steps.WebSteps;
-
-import java.net.InetAddress;
-import java.net.URL;
-import java.util.Objects;
+import org.prog.util.DriverName;
+import org.prog.util.WebDriverFactory;
 
 public class CucumberHooks implements EventListener {
 
@@ -30,20 +24,12 @@ public class CucumberHooks implements EventListener {
     }
 
     public void tearDown(TestRunFinished event) {
-        WebSteps.googlePage.quitDriver();
+        WebDriverFactory.getInstance().quitAllDriver();
     }
 
     @SneakyThrows
     public static WebDriver getDriver() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--remote-allow-origins=*");
-        chromeOptions.setCapability("enableVNC", true);
-        chromeOptions.setCapability("enableVideo", true);
-
-        if ("TSELSE3871808".equals(InetAddress.getLocalHost().getHostName())) {
-            return new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), chromeOptions);
-        } else {
-            return new RemoteWebDriver(new URL("http://selenoid:4444/wd/hub"), chromeOptions);
-        }
+        return WebDriverFactory.getInstance()
+                .getDriver(DriverName.valueOf(System.getenv("driver.name")));
     }
 }
