@@ -15,8 +15,8 @@ public class GooglePage {
 
     private WebDriver webDriver;
 
-    public GooglePage(WebDriver webDriver) {
-        this.webDriver = webDriver;
+    public GooglePage() {
+        this.webDriver = CucumberHooks.getDriver();
     }
 
     public void loadPage() {

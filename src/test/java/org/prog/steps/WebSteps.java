@@ -4,7 +4,7 @@ import io.cucumber.java.en.Given;
 import org.pages.GooglePage;
 
 public class WebSteps {
-    public static GooglePage googlePage;
+    public static GooglePage googlePage = new GooglePage();
 
     @Given("Load google page")
     public void loadPage() {
