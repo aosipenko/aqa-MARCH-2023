@@ -4,7 +4,10 @@ import io.cucumber.java.en.Given;
 import org.prog.api.dto.NameDto;
 import org.prog.api.dto.SearchResultsDto;
 import org.prog.api.dto.UserDto;
+import org.prog.db.Persons;
+import org.prog.db.PersonsJpa;
 import org.prog.util.DataHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 
 import java.net.InetAddress;
@@ -23,15 +26,41 @@ public class SqlSteps {
 
     private static final Random random = new Random();
 
+    @Autowired
+    private PersonsJpa personsJpa;
+
+    @Autowired
+    private DataHolder dataHolder;
+
+    @Given("I store persons data using Spring to DB from {string}")
+    public void storePersonsDataToDBusingSpring(String alias) {
+        ((SearchResultsDto) dataHolder.get(alias))
+                .getResults().forEach(userDto -> {
+                    NameDto name = userDto.getName();
+                    Persons person = Persons.builder()
+                            .firstName(name.getFirst())
+                            .lastName(name.getLast())
+                            .gender(userDto.getGender())
+                            .title(name.getTitle()).build();
+                    personsJpa.save(person);
+                });
+    }
+
     @Given("store persons data to DB from {string}")
     public void storePersonsDataToDB(String alias) {
-        ((SearchResultsDto) DataHolder.getInstance().get(alias))
+        ((SearchResultsDto) dataHolder.get(alias))
                 .getResults().forEach(userDto -> storeUser(userDto));
     }
 
     @Given("i pick random user from DB as {string}")
     public void pickRandomPerson(String alias) {
-        DataHolder.getInstance().put(alias, getRandomUserFromDB());
+        dataHolder.put(alias, getRandomUserFromDB());
+    }
+
+    @Given("i print all from db")
+    public void findUserByName() {
+        List<Persons> persons = personsJpa.findAll();
+        persons.forEach(persons1 -> System.out.println(persons1));
     }
 
     private void storeUser(UserDto userDto) {

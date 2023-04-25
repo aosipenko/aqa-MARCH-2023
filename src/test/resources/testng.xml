@@ -4,8 +4,8 @@
     <parameter name="platform" value="${platform}"/>
 
     <test name="TestSuite">
-        <packages>
-            <package name="org.prog.cucumber"/>
-        </packages>
+        <classes>
+            <class name="org.prog.cucumber.CucumberRunner"/>
+        </classes>
     </test>
 </suite>

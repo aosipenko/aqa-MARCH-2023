@@ -1,18 +1,12 @@
 package org.prog.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 
+@Component
 public class DataHolder {
-
     private final static HashMap<String, Object> holder = new HashMap<>();
-    private final static DataHolder instance = new DataHolder();
-
-    private DataHolder() {
-    }
-
-    public static DataHolder getInstance() {
-        return instance;
-    }
 
     public void put(String alias, Object o) {
         holder.put(alias, o);

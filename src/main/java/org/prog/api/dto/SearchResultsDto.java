@@ -11,20 +11,4 @@ import java.util.List;
 @NoArgsConstructor
 public class SearchResultsDto {
     private List<UserDto> results;
-
-//    public SearchResultsDto() {
-//
-//    }
-//
-//    public SearchResultsDto(List<UserDto> results) {
-//        this.results = results;
-//    }
-//
-//    public List<UserDto> getResults() {
-//        return results;
-//    }
-//
-//    public void setResults(List<UserDto> results) {
-//        this.results = results;
-//    }
 }

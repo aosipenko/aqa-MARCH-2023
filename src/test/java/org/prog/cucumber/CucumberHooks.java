@@ -8,8 +8,12 @@ import lombok.SneakyThrows;
 import org.openqa.selenium.WebDriver;
 import org.prog.util.DriverName;
 import org.prog.util.WebDriverFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CucumberHooks implements EventListener {
+
+    @Autowired
+    private WebDriverFactory webDriverFactory;
 
     @Override
     public void setEventPublisher(EventPublisher eventPublisher) {
